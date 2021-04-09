@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
+{% set page_title = 'Les articles' %}
 
-{% block title %} Les articles
+{% block title %} 
 {% endblock %}
 
 {% block body %}
@@ -11,15 +12,21 @@
     {% for article in articles %}
 
     <article>
-        <h2>{{ article.title }}</h2>
+        <h1>{{ article.title }}</h1>
         <div class="metadata">Ecrit le {{ article.createAt | date('d/m/Y') }} à {{ article.createAt | date('H:i') }}
-            dans la catégorie {{article.category.title}}</div>
+            dans la catégorie <strong>{{article.category.title}}.</strong>
+
+            <br>
+
+            <strong>🗨 {{ article.comments | length }} commentaires</strong>
+        </div>
 
         <div class="content">
-            <img src="{{ article.image }}" alt="">
+            <img src="{{ article.image }}" alt="Productivité">
             {{ article.content | raw }}
-            <a href="{{ path('blog_show', {'id': article.id}) }}" class="btn-primary">Lire la suite</a>
+            <a href="{{ path('blog_show', {'id': article.id}) }}" class="btn btn-primary btn-sm">Lire la suite</a>
         </div>
+        <br>
     </article>
 
     {% endfor %}

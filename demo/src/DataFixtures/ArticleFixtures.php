@@ -7,15 +7,32 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Comment;
-
-
+use App\Entity\User;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ArticleFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    private UserPasswordEncoderInterface $encoder;
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
-          
+        $this->encoder = $encoder;
+    }
+    
+    
+    public function load(ObjectManager $manager) 
+    {
+
         $faker = \Faker\Factory::create('fr_FR');
+
+        $admin = new User();
+        $admin->setUsername("admin");
+        $admin->setEmail("admin@admin.fr");
+        $hash = $this->encoder->encodePassword($admin, "admin");
+        $admin->setPassword($hash);
+        $admin->setRoles(['ROLE_ADMIN']);
+        $manager->persist($admin);
+
+        
        
 
         //Crée 3 catégories fakées

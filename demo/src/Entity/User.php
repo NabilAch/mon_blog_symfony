@@ -44,9 +44,13 @@ class User implements UserInterface
 
     /** 
      * @Assert\EqualTo(propertyPath="password", message="Votre mot de passe n'est pas identique"))
-    */
+     */
     public $confirm_password;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     public function getId(): ?int
     {
@@ -89,11 +93,30 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials(){}
+    public function eraseCredentials()
+    {
+    }
 
-    public function getSalt(){}
+    public function getSalt()
+    {
+    }
 
-    public function getRoles(){ 
-        return ['ROLE_USER'];
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+    
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 }
